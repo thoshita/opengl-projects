@@ -18,11 +18,13 @@ set(TRIANGLE_SOURCES
         commons/shader.cpp)
 
 set(CAR_HEADERS
-        commons/shader.h)
+        commons/shader.h
+        commons/drawer.h)
 
 set(CAR_SOURCES
         car/src/main.cpp
-        commons/shader.cpp)
+        commons/shader.cpp
+        commons/drawer.cpp)
 
 add_executable(triangle
         ${TRIANGLE_HEADERS}
