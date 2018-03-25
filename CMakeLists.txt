@@ -7,6 +7,7 @@ find_package(glfw3 REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(TRIANGLE_HEADERS
         commons/shader.h
         )

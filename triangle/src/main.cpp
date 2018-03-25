@@ -1,7 +1,7 @@
-#include "../../commons/shader.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <commons/shader.h>
 using namespace std;
 
 #define WINDOW_WIDTH 1024
