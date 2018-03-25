@@ -9,11 +9,6 @@ using namespace std;
 #define VERTEX_SHADER_FILE_PATH  "triangle/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_FILE_PATH "triangle/shaders/fragment_shader.glsl"
 
-
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
 void error_callback(int error, const char * description) {
     cout << description << endl;
 }
@@ -33,7 +28,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1024, 768, "Hello Triangle", NULL, NULL);
     if (window == NULL) {
         cerr << "Failed to create GLFW window" << endl;
         glfwTerminate();
@@ -53,20 +48,16 @@ int main() {
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     // Dark blue background
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
-    // Set viewport
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Create and compile GLSL program from the shaders
     GLuint shader_program = LoadShaders(VERTEX_SHADER_FILE_PATH, FRAGMENT_SHADER_FILE_PATH);
 
     // Create triangle points and set their colors
     static const GLfloat triangle_points[] = {
-            0.0f,  0.5f, 1.0f, 0.0f, 0.0f, // Vertex 1: Red
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Vertex 2: Green
-            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f  // Vertex 3: Blue
+            -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f, // Vertex 1: Red
+            0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Vertex 2: Green
+            1.0f, -1.0f, 0.0f, 0.0f, 1.0f  // Vertex 3: Blue
     };
 
     // Create VBO
