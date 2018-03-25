@@ -1,4 +1,4 @@
-#version 410 // same as openGL version
+#version 330 // same as openGL version
 
 in vec3 out_color; // variable name must be the same as output from vertex shader
 out vec4 frag_color; // (r, g, b, a)

@@ -1,4 +1,4 @@
-#version 410 core // same as openGL version
+#version 330 core // same as openGL version
 
 // Input vertex data, different for all executions of this shader.
 in vec2 position;
