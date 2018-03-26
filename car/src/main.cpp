@@ -14,19 +14,19 @@ using namespace std;
 #define FRAGMENT_SHADER_FILE_PATH "car/shaders/fragment_shader.glsl"
 
 void errorCallback(int error, const char * description) {
-    cout << description << endl;
+    cout << "Error " << error << ": " << description << endl;
 }
 
 void drawWheels(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_section) {
     combineVertices(vertices,
                     num_of_points,
-                    createCircle(-0.45, -0.25, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
+                    createCircle(-0.45f, -0.25f, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
                     SIDES_OF_CIRCLE + 2,
                     start_of_section);
 
     combineVertices(vertices,
                     num_of_points,
-                    createCircle(0.45, -0.25, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
+                    createCircle(0.45f, -0.25f, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
                     SIDES_OF_CIRCLE + 2,
                     start_of_section);
 }
@@ -35,9 +35,9 @@ void drawAtap(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_se
     combineVertices(vertices,
                     num_of_points,
                     createTriangle(
-                            -0.15, 0.15,
-                            0.85, 0.15,
-                            0.15, 0.45,
+                            -0.15f, 0.15f,
+                            0.85f, 0.15f,
+                            0.15f, 0.45f,
 
                             1, 0, 0),
                     3,
@@ -48,9 +48,9 @@ void drawKaca(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_se
     combineVertices(vertices,
                     num_of_points,
                     createTriangle(
-                            -0.15, 0.15,
-                            0.10, 0.15,
-                            0.10, 0.35,
+                            -0.15f, 0.15f,
+                            0.10f, 0.15f,
+                            0.10f, 0.35f,
 
                             1, 1, 1),
                     3,
@@ -59,9 +59,9 @@ void drawKaca(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_se
     combineVertices(vertices,
                     num_of_points,
                     createTriangle(
-                            0.10, 0.15,
-                            0.10, 0.35,
-                            0.13, 0.40,
+                            0.10f, 0.15f,
+                            0.10f, 0.35f,
+                            0.13f, 0.40f,
 
                             1, 1, 1),
                     3,
@@ -70,15 +70,49 @@ void drawKaca(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_se
     combineVertices(vertices,
                     num_of_points,
                     createTriangle(
-                            0.10, 0.15,
-                            0.13, 0.40,
-                            0.25, 0.35,
+                            0.10f, 0.15f,
+                            0.13f, 0.40f,
+                            0.25f, 0.35f,
 
                             1, 1, 1),
                     3,
                     start_of_section);
 }
 
+void drawPintu(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_section) {
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            -0.15f, -0.30f,
+                            -0.15f, 0.10f,
+                            0.30f, 0.15f,
+
+                            0.5f, 0, 0),
+                    3,
+                    start_of_section);
+
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            0.30f, 0.15f,
+                            0.15f, -0.30f,
+                            0.15f, -0.20f,
+
+                            0.5f, 0, 0),
+                    3,
+                    start_of_section);
+
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            0.15f, -0.20f,
+                            0.15f, -0.30f,
+                            -0.15f, -0.30f,
+
+                            0.5f, 0, 0),
+                    3,
+                    start_of_section);
+}
 
 int main() {
     glfwSetErrorCallback(errorCallback);
@@ -114,12 +148,13 @@ int main() {
     GLuint shader_program = LoadShaders(VERTEX_SHADER_FILE_PATH, FRAGMENT_SHADER_FILE_PATH);
 
     vector<int> start_of_section;
-    Vertices vertices = new GLfloat;
+    auto vertices = new GLfloat;
     int num_of_points = 0;
 
     drawWheels(vertices, num_of_points, start_of_section);
     drawAtap(vertices, num_of_points, start_of_section);
     drawKaca(vertices, num_of_points, start_of_section);
+    drawPintu(vertices, num_of_points, start_of_section);
 
     GLuint vertex_buffer;
 
@@ -136,7 +171,7 @@ int main() {
     GLint posAttrib = glGetAttribLocation(shader_program, "position");
     glEnableVertexAttribArray(static_cast<GLuint>(posAttrib));
     glVertexAttribPointer(static_cast<GLuint>(posAttrib), 2, GL_FLOAT, GL_FALSE,
-                          5*sizeof(float), 0);
+                          5*sizeof(float), nullptr);
 
     auto colAttrib = glGetAttribLocation(shader_program, "in_color");
     glEnableVertexAttribArray(static_cast<GLuint>(colAttrib));
