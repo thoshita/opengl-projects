@@ -13,12 +13,75 @@ using namespace std;
 #define VERTEX_SHADER_FILE_PATH  "car/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_FILE_PATH "car/shaders/fragment_shader.glsl"
 
-void error_callback(int error, const char * description) {
+void errorCallback(int error, const char * description) {
     cout << description << endl;
 }
 
+void drawWheels(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_section) {
+    combineVertices(vertices,
+                    num_of_points,
+                    createCircle(-0.45, -0.25, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
+                    SIDES_OF_CIRCLE + 2,
+                    start_of_section);
+
+    combineVertices(vertices,
+                    num_of_points,
+                    createCircle(0.45, -0.25, 1, 1, 1, 0.15, SIDES_OF_CIRCLE),
+                    SIDES_OF_CIRCLE + 2,
+                    start_of_section);
+}
+
+void drawAtap(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_section) {
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            -0.15, 0.15,
+                            0.85, 0.15,
+                            0.15, 0.45,
+
+                            1, 0, 0),
+                    3,
+                    start_of_section);
+}
+
+void drawKaca(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_section) {
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            -0.15, 0.15,
+                            0.10, 0.15,
+                            0.10, 0.35,
+
+                            1, 1, 1),
+                    3,
+                    start_of_section);
+
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            0.10, 0.15,
+                            0.10, 0.35,
+                            0.13, 0.40,
+
+                            1, 1, 1),
+                    3,
+                    start_of_section);
+
+    combineVertices(vertices,
+                    num_of_points,
+                    createTriangle(
+                            0.10, 0.15,
+                            0.13, 0.40,
+                            0.25, 0.35,
+
+                            1, 1, 1),
+                    3,
+                    start_of_section);
+}
+
+
 int main() {
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback(errorCallback);
     if(!glfwInit()) {
         cerr << "Failed to initialize GLFW" << endl;
         return -1;
@@ -51,21 +114,12 @@ int main() {
     GLuint shader_program = LoadShaders(VERTEX_SHADER_FILE_PATH, FRAGMENT_SHADER_FILE_PATH);
 
     vector<int> start_of_section;
+    Vertices vertices = new GLfloat;
+    int num_of_points = 0;
 
-    Vertices vertices = createCircle(0, 0, 1, 0, 0, 0.3, SIDES_OF_CIRCLE);
-    start_of_section.push_back(0);
-    int num_of_points = SIDES_OF_CIRCLE + 2;
-
-    vertices = combineVertices(vertices, num_of_points,
-                               createTriangle(
-                                    static_cast<GLfloat>(-0.3), static_cast<GLfloat>(-0.35),
-                                    0.3, static_cast<GLfloat>(-0.35),
-                                    0.3, 0.15,
-
-                                    1, 1, 1),
-                               3);
-    start_of_section.push_back(num_of_points);
-    num_of_points += 3;
+    drawWheels(vertices, num_of_points, start_of_section);
+    drawAtap(vertices, num_of_points, start_of_section);
+    drawKaca(vertices, num_of_points, start_of_section);
 
     GLuint vertex_buffer;
 
@@ -99,7 +153,11 @@ int main() {
         glBindVertexArray(vertex_array);
 
         glDrawArrays(GL_TRIANGLE_FAN, start_of_section[0], SIDES_OF_CIRCLE + 2);
-        glDrawArrays(GL_TRIANGLES, start_of_section[1], 3);
+        glDrawArrays(GL_TRIANGLE_FAN, start_of_section[1], SIDES_OF_CIRCLE + 2);
+
+        for(int i = 2; i < start_of_section.size(); i++) {
+            glDrawArrays(GL_TRIANGLES, start_of_section[i], 3);
+        };
 
         glBindVertexArray(0);
 

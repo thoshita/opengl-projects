@@ -5,6 +5,12 @@
 #include <math.h>
 #include "drawer.h"
 
+void combineVertices(Vertices &a, GLint &n_a, Vertices b, GLint n_b, vector<int> &start_of_section) {
+    a = combineVertices(a, n_a, b, n_b);
+    start_of_section.push_back(n_a);
+    n_a += n_b;
+}
+
 Vertices combineVertices(Vertices a, GLint n_a, Vertices b, GLint n_b) {
     auto new_arr = new GLfloat[(n_a + n_b) * 5];
 
@@ -43,9 +49,9 @@ Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLf
 
     circleVerticesX[0] = x;
     circleVerticesY[0] = y;
-    circleVerticesR[0] = 1;
-    circleVerticesG[0] = 0;
-    circleVerticesB[0] = 0;
+    circleVerticesR[0] = r;
+    circleVerticesG[0] = g;
+    circleVerticesB[0] = b;
 
     for ( int i = 1; i < numberOfVertices; i++ ) {
         circleVerticesX[i] = x + ( radius * cos( i *  twicePi / numberOfSides ) );
