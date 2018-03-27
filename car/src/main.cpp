@@ -148,7 +148,7 @@ void drawBadan(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_s
             {
                     -0.30f, -0.35f,
                     -0.60f, -0.35f,
-                    -0.70f, 0.f
+                    -0.60f, 0.15f
             },
             {
                     -0.60f, 0.f,
@@ -164,12 +164,18 @@ void drawBadan(Vertices &vertices, GLint &num_of_points, vector<int> &start_of_s
                     -0.70f, -0.20f,
                     -0.60f, 0.f,
                     -0.60f, -0.35f
+            },
+            {
+                    -0.60f, 0.f,
+                    -0.60f, -0.35f,
+                    -0.70f, -0.25f
             }
+
     };
 
     GLfloat r = 0.95f, g = 0, b = 0;
 
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < 9; i++) {
         combineVertices(vertices, num_of_points, createTriangle(
             points[i][0], points[i][1], points[i][2], points[i][3], points[i][4], points[i][5], r, g, b
         ), 3, start_of_section);
