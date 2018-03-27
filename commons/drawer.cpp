@@ -36,7 +36,7 @@ Vertices combineVertices(Vertices a, GLint n_a, Vertices b, GLint n_b) {
     return new_arr;
 }
 
-Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLfloat radius, GLint numberOfSides) {
+Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLfloat radius, GLint numberOfSides, GLint mainan) {
     int numberOfVertices = numberOfSides + 2;
 
     GLfloat twicePi = static_cast<GLfloat>(2.0f * M_PI);
@@ -56,7 +56,7 @@ Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLf
     for ( int i = 1; i < numberOfVertices; i++ ) {
         circleVerticesX[i] = x + ( radius * cos( i *  twicePi / numberOfSides ) );
         circleVerticesY[i] = y + ( radius * sin( i * twicePi / numberOfSides ) );
-        circleVerticesR[i] = r;
+        circleVerticesR[i] = r * (1.0 * ((i + mainan) % numberOfVertices) / numberOfVertices);
         circleVerticesG[i] = g;
         circleVerticesB[i] = b;
     }

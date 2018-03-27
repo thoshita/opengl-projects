@@ -13,7 +13,7 @@ typedef GLfloat* Vertices;
 
 Vertices combineVertices(Vertices a, GLint n_a, Vertices b, GLint n_b);
 void combineVertices(Vertices &a, GLint &n_a, Vertices b, GLint n_b, vector<int> &start_of_section);
-Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLfloat radius, GLint numberOfSides);
+Vertices createCircle(GLfloat x, GLfloat y, GLfloat r, GLfloat g, GLfloat b, GLfloat radius, GLint numberOfSides, GLint mainan = 0);
 Vertices createTriangle(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat r, GLfloat g, GLfloat b);
 
 
