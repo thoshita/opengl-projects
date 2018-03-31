@@ -79,6 +79,15 @@ set(CAR_SOURCES
         commons/shader.cpp
         commons/drawer.cpp)
 
+set(KIJANG_HEADERS
+		commons/shader.h
+		commons/drawer.h)
+
+set(KIJANG_SOURCES
+		kijang/src/main.cpp
+		commons/shader.cpp
+		commons/drawer.cpp)
+
 add_executable(triangle
         ${TRIANGLE_HEADERS}
         ${TRIANGLE_SOURCES}
@@ -88,6 +97,11 @@ add_executable(car
         ${CAR_HEADERS}
         ${CAR_SOURCES})
 
+add_executable(kijang
+		${KIJANG_HEADERS}
+		${KIJANG_SOURCES})
+
+
 target_link_libraries(triangle
         ${ALL_LIBS}
         )
@@ -95,3 +109,7 @@ target_link_libraries(triangle
 target_link_libraries(car
         ${ALL_LIBS}
         )
+
+target_link_libraries(kijang
+		${ALL_LIBS}
+		)

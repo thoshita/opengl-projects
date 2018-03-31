@@ -93,3 +93,7 @@ Vertices createTriangle(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat 
 
     return triangle;
 }
+
+Vertices createTriangleFan(GLfloat x, GLfloat y, GLfloat *points, GLint numberOfPoints) {
+
+}
