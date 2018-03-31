@@ -13,3 +13,5 @@
 
 ## Programs
 - `triangle`
+- `car`
+- `kijang`
