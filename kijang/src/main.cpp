@@ -171,12 +171,13 @@ int main() {
     glDepthFunc(GL_LESS);
 
     GLfloat camera_x = 0, camera_y = 0, camera_z = -3;
-    GLfloat acceleration = 0.5;
+    GLfloat direction_x = 0, direction_y = 0, direction_z = 3;
+    GLfloat acceleration = 0.1;
 
     do {
         View = glm::lookAt(
                 glm::vec3(camera_x,camera_y,camera_z),
-                glm::vec3(0,0,0),
+                glm::vec3(camera_x + direction_x, camera_y + direction_y, camera_z + direction_z),
                 glm::vec3(0,1,0)
         );
         MVP = Projection * View * Model;
@@ -217,12 +218,28 @@ int main() {
             camera_x += acceleration;
         }
 
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+            camera_z -= acceleration;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
             camera_z += acceleration;
         }
 
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            direction_y += acceleration;
+        }
+
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            camera_z -= acceleration;
+            direction_y -= acceleration;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            direction_x += acceleration;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            direction_x -= acceleration;
         }
 
     } while( glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
