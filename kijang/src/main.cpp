@@ -78,60 +78,69 @@ int main() {
             {0.8f, -0.2f, 0.f, 1.f, 0.f, 0.f},
             {-0.5f, -0.2f, 0.f, 1.f, 0.f, 0.f},
 
-            {-0.9f, -0.2f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.9f, 0.f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.8f, 0.1f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.5f, 0.2f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 0.f, 1.f, 0.f},
+            {-0.9f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.9f, 0.f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.8f, 0.1f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.5f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.5f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
 
-            {-0.5f, 0.2f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.1f, 0.4f, 0.5f, 0.f, 1.f, 0.f},
-            {0.8f, 0.4f, 0.5f, 0.f, 1.f, 0.f},
-            {0.9f, 0.2f, 0.5f, 0.f, 1.f, 0.f},
-            {0.9f, -0.1f, 0.5f, 0.f, 1.f, 0.f},
-            {0.8f, -0.2f, 0.5f, 0.f, 1.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 0.f, 1.f, 0.f},
+            {-0.5f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.1f, 0.4f, 0.5f, 1.f, 0.f, 0.f},
+            {0.8f, 0.4f, 0.5f, 1.f, 0.f, 0.f},
+            {0.9f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
+            {0.9f, -0.1f, 0.5f, 1.f, 0.f, 0.f},
+            {0.8f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
+            {-0.5f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
 
-            {-0.9f, -0.2f, 0.f, 1.f, 1.f, 0.f},
-            {-0.9f, 0.f, 0.f, 1.f, 1.f, 0.f},
-            {-0.9f, 0.f, 0.5f, 1.f, 1.f, 0.f},
-            {-0.9f, -0.2f, 0.5f, 1.f, 1.f, 0.f},
+            {-0.9f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.9f, 0.f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.9f, 0.f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.9f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {-0.9f, 0.f, 0.f, 1.f, 0.f, 1.f},
-            {-0.8f, 0.1f, 0.f, 1.f, 0.f, 1.f},
-            {-0.8f, 0.1f, 0.5f, 1.f, 0.f, 1.f},
-            {-0.9f, 0.f, 0.5f, 1.f, 0.f, 1.f},
+            {-0.9f, 0.f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.8f, 0.1f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.8f, 0.1f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.9f, 0.f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {-0.8f, 0.1f, 0.f, 1.f, 1.f, 1.f},
-            {-0.5f, 0.2f, 0.f, 1.f, 1.f, 1.f},
-            {-0.5f, 0.2f, 0.5f, 1.f, 1.f, 1.f},
-            {-0.8f, 0.1f, 0.5f, 1.f, 1.f, 1.f},
+            {-0.8f, 0.1f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.5f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.5f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.8f, 0.1f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {-0.5f, 0.2f, 0.f, 0.f, 0.f, 1.f},
-            {-0.1f, 0.4f, 0.f, 0.f, 0.f, 1.f},
-            {-0.1f, 0.4f, 0.5f, 0.f, 0.f, 1.f},
-            {-0.5f, 0.2f, 0.5f, 0.f, 0.f, 1.f},
+            {-0.5f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.1f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.1f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.5f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {-0.1f, 0.4f, 0.f, 0.f, 1.f, 1.f},
-            {0.8f, 0.4f, 0.f, 0.f, 1.f, 1.f},
-            {0.8f, 0.4f, 0.5f, 0.f, 1.f, 1.f},
-            {-0.1f, 0.4f, 0.5f, 0.f, 1.f, 1.f},
+            {-0.1f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
+            {0.8f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
+            {0.8f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.1f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {0.8f, 0.4f, 0.f, 0.3f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.f, 0.3f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.5f, 0.3f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.5f, 0.3f, 0.f, 0.f},
+            {0.8f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
+            {0.9f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {0.9f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
+            {0.8f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {0.9f, 0.2f, 0.f, 0.3f, 0.f, 0.3f},
-            {0.9f, -0.1f, 0.f, 0.3f, 0.f, 0.3f},
-            {0.9f, -0.1f, 0.5f, 0.3f, 0.f, 0.3f},
-            {0.9f, 0.2f, 0.5f, 0.3f, 0.f, 0.3f},
+            {0.9f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {0.9f, -0.1f, 0.f, 0.5f, 0.f, 0.f},
+            {0.9f, -0.1f, 0.5f, 0.5f, 0.f, 0.f},
+            {0.9f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
 
-            {0.9f, -0.1f, 0.f, 0.3f, 0.3f, 0.3f},
-            {0.8f, -0.2f, 0.f, 0.3f, 0.3f, 0.3f},
-            {0.8f, -0.2f, 0.5f, 0.3f, 0.3f, 0.3f},
-            {0.9f, -0.1f, 0.5f, 0.3f, 0.3f, 0.3f},
+            {0.9f, -0.1f, 0.f, 0.5f, 0.f, 0.f},
+            {0.8f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {0.8f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
+            {0.9f, -0.1f, 0.5f, 0.5f, 0.f, 0.f},
 
+            {0.8f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.5f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.5f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
+            {0.8f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
+
+            {-0.5f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.9f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
+            {-0.9f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
+            {-0.5f, -0.2f, 0.5f, 0.5f, 0.f, 0.f}
     };
 
     GLuint vertex_buffer;
@@ -158,8 +167,10 @@ int main() {
 
     glBindVertexArray(0);
     glUseProgram(shader_program);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
-    GLfloat camera_x = 0, camera_y = 0, camera_z = 5;
+    GLfloat camera_x = 0, camera_y = 0, camera_z = -3;
     GLfloat acceleration = 0.5;
 
     do {
@@ -170,7 +181,7 @@ int main() {
         );
         MVP = Projection * View * Model;
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUniformMatrix4fv(matrix, 1, GL_FALSE, &MVP[0][0]);
 
@@ -181,7 +192,7 @@ int main() {
         glDrawArrays(GL_TRIANGLE_FAN, 12, 5);
         glDrawArrays(GL_TRIANGLE_FAN, 17, 7);
 
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < 10; i++) {
             glDrawArrays(GL_TRIANGLE_FAN, 24 + i*4, 4);
         }
 
@@ -204,6 +215,14 @@ int main() {
 
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             camera_x += acceleration;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            camera_z += acceleration;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            camera_z -= acceleration;
         }
 
     } while( glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
