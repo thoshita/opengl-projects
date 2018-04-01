@@ -242,6 +242,12 @@ int main() {
             direction_x -= acceleration;
         }
 
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            direction_x = -camera_x;
+            direction_y = -camera_y;
+            direction_z = -camera_z;
+        }
+
     } while( glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 
     glDeleteBuffers(1, &vertex_buffer);
