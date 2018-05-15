@@ -26,8 +26,11 @@ using namespace std;
 #define PARTICLE_FRAGMENT_SHADER_FILE_PATH "uas/shaders/particle_fragment_shader.glsl"
 #define BITMAP_PATH "uas/batik.bmp"
 #define SMOKE_PNG_PATH "uas/smoke.png"
+#define RAIN_PNG_PATH "uas/rain.png"
 
-const int MaxParticles = 1000;
+GLfloat y_min = 999;
+
+const int MaxParticles = 10000;
 Particle ParticlesContainer[MaxParticles];
 int LastUsedParticle = 0, ParticlesCount = 0;
 
@@ -63,34 +66,55 @@ void genParticles(double delta) {
 
     for(int i=0; i<newparticles; i++){
         int particleIndex = FindUnusedParticle();
-        ParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
-        ParticlesContainer[particleIndex].pos = glm::vec3(0,0.5,-3);
 
-        float spread = 1.5f;
-        glm::vec3 maindir = glm::vec3(0.0f, 0.0f, -3.0f);
-        // Very bad way to generate a random direction;
-        // See for instance http://stackoverflow.com/questions/5408276/python-uniform-spherical-distribution instead,
-        // combined with some user-controlled parameters (main direction, spread, etc)
-        glm::vec3 randomdir = glm::vec3(
-                (rand()%2000 - 1000.0f)/2000.0f,
-                (rand()%2000)/2000.0f,
-                (rand()%2000 - 1000.0f)/2000.0f
-        );
+        if (i % 2 == 0) {
+            // Smoke
+            ParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
+            ParticlesContainer[particleIndex].pos = glm::vec3(0, 0.5, -3);
 
-        ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
+            float spread = 1.5f;
+            glm::vec3 maindir = glm::vec3(0.0f, 0.0f, -3.0f);
 
+            glm::vec3 randomdir = glm::vec3(
+                    (rand() % 2000 - 1000.0f) / 2000.0f,
+                    (rand() % 2000) / 5000.0f,
+                    (rand() % 2000 - 1000.0f) / 1000.0f
+            );
 
-        // Very bad way to generate a random color
-        ParticlesContainer[particleIndex].r = rand() % 256;
-        ParticlesContainer[particleIndex].g = rand() % 256;
-        ParticlesContainer[particleIndex].b = rand() % 256;
-        ParticlesContainer[particleIndex].a = (rand() % 256) / 3;
+            ParticlesContainer[particleIndex].speed = maindir + randomdir * spread;
 
-        ParticlesContainer[particleIndex].size = (rand()%1000)/4000.0f + 0.1f;
+            // Type: 0 - smoke
+            ParticlesContainer[particleIndex].r = 0;
 
+            ParticlesContainer[particleIndex].size = (rand() % 1000) / 4000.0f + 0.1f;
+        }
+        else {
+            // Rain
+            ParticlesContainer[particleIndex].life = 10;
+            ParticlesContainer[particleIndex].pos = glm::vec3((rand() % 2000000 - 1000000) / 100000.0f,
+                                                               10,
+                                                              (rand() % 2000000 - 1000000) / 100000.0f);
+
+            ParticlesContainer[particleIndex].speed = glm::vec3(0, 0, 0);
+
+            // Type: 0 - smoke
+            ParticlesContainer[particleIndex].r = 1;
+
+            ParticlesContainer[particleIndex].size = 0.04;
+        }
     }
 }
 
+void drawImageTexture(GLint texture, GLenum format, GLint width, GLint height, unsigned char* data) {
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 void simulateParticles(double delta, glm::vec3 CameraPosition) {
 // Simulate all particles
     ParticlesCount = 0;
@@ -102,10 +126,10 @@ void simulateParticles(double delta, glm::vec3 CameraPosition) {
 
             // Decrease life
             p.life -= delta;
-            if (p.life > 0.0f){
+            if (p.life > 0.0f && p.pos.y >= y_min){
 
                 // Simulate simple physics : gravity only, no collisions
-                p.speed += glm::vec3(0.0f,0.0f, 0.0f) * (float)delta * 0.5f;
+                p.speed += glm::vec3(0.0f,p.r == 0 ? (rand() % 5) / 5.0f : -9.8f, 0.0f) * (float)delta * 0.5f;
                 p.pos += p.speed * (float)delta;
                 p.cameradistance = glm::length2( p.pos - CameraPosition );
                 //ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
@@ -172,7 +196,7 @@ int main() {
     glfwPollEvents();
     glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
-    glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     for(int i=0; i<MaxParticles; i++){
         ParticlesContainer[i].life = -1.0f;
@@ -189,7 +213,8 @@ int main() {
 
     GLuint Texture = loadBMP_custom(BITMAP_PATH);
     GLuint TextureID  = glGetUniformLocation(shader_program, "myTexture");
-    GLuint particle_texture_id  = glGetUniformLocation(particle_shader_program, "myTextureSampler");
+    GLuint smoke_texture_id  = glGetUniformLocation(particle_shader_program, "smokeTexture");
+    GLuint rain_texture_id  = glGetUniformLocation(particle_shader_program, "rainTexture");
 
     glm::mat4 Projection = glm::perspective(glm::radians(45.f), 4.0f / 3.0f, 0.1f, 100.0f);
     glm::mat4 View;
@@ -201,11 +226,15 @@ int main() {
     std::vector<glm::vec3> normals;
     bool res = loadOBJ("uas/car.obj", vertices, uv_vertices, normals);
 
+    for (glm::vec3 vertex : vertices) {
+        y_min = min(y_min, vertex.y);
+    }
+
     static const GLfloat g_vertex_buffer_data[] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f,
-            0.5f,  0.5f, 0.0f,
+            -0.25f, -0.5f, 0.0f,
+            0.25f, -0.5f, 0.0f,
+            -0.25f,  0.5f, 0.0f,
+            0.25f,  0.5f, 0.0f,
     };
 
     GLuint particle_vertex_array;
@@ -248,8 +277,8 @@ int main() {
 
     GLuint smoke_texture;
     glGenTextures(1, &smoke_texture);
-    int width, height, n_components;
-    unsigned char* smoke_data = stbi_load(SMOKE_PNG_PATH, &width, &height, &n_components, 0);
+    int smoke_width, smoke_height, n_components;
+    unsigned char* smoke_data = stbi_load(SMOKE_PNG_PATH, &smoke_width, &smoke_height, &n_components, 0);
     GLenum smoke_format;
 
     switch (n_components) {
@@ -264,11 +293,29 @@ int main() {
             break;
     }
 
+    GLuint rain_texture;
+    glGenTextures(1, &rain_texture);
+    int rain_width, rain_height;
+    unsigned char* rain_data = stbi_load(RAIN_PNG_PATH, &rain_width, &rain_height, &n_components, 0);
+    GLenum rain_format;
+
+    switch (n_components) {
+        case 1:
+            rain_format = GL_RED;
+            break;
+        case 3:
+            rain_format = GL_RGB;
+            break;
+        case 4:
+            rain_format = GL_RGBA;
+            break;
+    }
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    GLfloat camera_x = -10, camera_y = 3, camera_z = 3;
-    GLfloat direction_x = 10, direction_y = -3, direction_z = -3;
+    GLfloat camera_x = -10, camera_y = 4, camera_z = 10;
+    GLfloat direction_x = 10, direction_y = -4, direction_z = -10;
     GLfloat acceleration = 0.1;
 
     double lastTime = glfwGetTime();
@@ -357,18 +404,13 @@ int main() {
         // Use our shader
         glUseProgram(particle_shader_program);
 
-        // Bind our texture in Texture Unit 1
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, smoke_texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, smoke_format, width, height, 0, smoke_format, GL_UNSIGNED_BYTE, smoke_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        drawImageTexture(smoke_texture, smoke_format, smoke_width, smoke_height, smoke_data);
+        glUniform1i(smoke_texture_id, 1);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // Set our "myTextureSampler" sampler to use Texture Unit 0
-        glUniform1i(particle_texture_id, 1);
+        glActiveTexture(GL_TEXTURE2);
+        drawImageTexture(rain_texture, rain_format, rain_width, rain_height, rain_data);
+        glUniform1i(rain_texture_id, 2);
 
         // Same as the billboards tutorial
         glUniform3f(camera_right_particle, View[0][0], View[1][0], View[2][0]);

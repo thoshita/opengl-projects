@@ -7,10 +7,13 @@ in vec4 particlecolor;
 // Ouput data
 out vec4 color;
 
-uniform sampler2D myTextureSampler;
+uniform sampler2D smokeTexture;
+uniform sampler2D rainTexture;
 
 void main(){
-	// Output color = color of the texture at the specified UV
-	color = texture( myTextureSampler, UV );
-
+	if (particlecolor.r == 0) {
+	    color = texture( smokeTexture, UV );
+	} else {
+	    color = texture( rainTexture, UV );
+	}
 }
