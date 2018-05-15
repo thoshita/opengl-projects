@@ -16,7 +16,7 @@ using namespace std;
 #define NUM_OF_WHEELS 5
 #define VERTEX_SHADER_FILE_PATH  "uas/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_FILE_PATH "uas/shaders/fragment_shader.glsl"
-#define BITMAP_PATH "uas/turfafildah.bmp"
+#define BITMAP_PATH "uas/batik.bmp"
 
 void errorCallback(int error, const char * description) {
     cout << "Error " << error << ": " << description << endl;
@@ -34,7 +34,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Kijang", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "UAS", nullptr, nullptr);
     if (window == nullptr) {
         cerr << "Failed to create GLFW window" << endl;
         glfwTerminate();
@@ -55,7 +55,7 @@ int main() {
     glfwPollEvents();
     glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
 
     GLuint shader_program = LoadShaders(VERTEX_SHADER_FILE_PATH, FRAGMENT_SHADER_FILE_PATH);
     GLuint matrix = glGetUniformLocation(shader_program, "MVP");
