@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5.1)
 project(opengl_2)
 find_package(OpenGL REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 
@@ -99,6 +99,17 @@ set(TEXTURE_SOURCES
 		commons/drawer.cpp
         commons/texture.cpp)
 
+set(UAS_HEADERS
+		commons/shader.h
+		commons/drawer.h
+        commons/texture.h)
+
+set(UAS_SOURCES
+        uas/src/main_uas.cpp
+		commons/shader.cpp
+		commons/drawer.cpp
+        commons/texture.cpp)
+
 add_executable(triangle
         ${TRIANGLE_HEADERS}
         ${TRIANGLE_SOURCES}
@@ -116,6 +127,10 @@ add_executable(texture
 		${TEXTURE_HEADERS}
 		${TEXTURE_SOURCES})
 
+add_executable(uas
+		${UAS_HEADERS}
+		${UAS_SOURCES})
+
 target_link_libraries(triangle
         ${ALL_LIBS}
         )
@@ -129,5 +144,9 @@ target_link_libraries(kijang
 		)
 
 target_link_libraries(texture
+		${ALL_LIBS}
+		)
+
+target_link_libraries(uas
 		${ALL_LIBS}
 		)
