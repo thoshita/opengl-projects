@@ -103,7 +103,7 @@ set(UAS_HEADERS
 		commons/shader.h
 		commons/drawer.h
         commons/texture.h
-		commons/objloader.h)
+		commons/objloader.h commons/particle.h)
 
 set(UAS_SOURCES
         uas/src/main_uas.cpp
