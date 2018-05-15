@@ -1,3 +1,5 @@
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -10,6 +12,7 @@
 #include <commons/objloader.h>
 #include <commons/particle.h>
 #include <algorithm>
+#include <commons/stb_image.h>
 
 using namespace std;
 
@@ -22,7 +25,7 @@ using namespace std;
 #define PARTICLE_VERTEX_SHADER_FILE_PATH  "uas/shaders/particle_vertex_shader.glsl"
 #define PARTICLE_FRAGMENT_SHADER_FILE_PATH "uas/shaders/particle_fragment_shader.glsl"
 #define BITMAP_PATH "uas/batik.bmp"
-#define SMOKE_BITMAP_PATH "uas/smoke.bmp"
+#define SMOKE_PNG_PATH "uas/smoke.png"
 
 const int MaxParticles = 1000;
 Particle ParticlesContainer[MaxParticles];
@@ -54,9 +57,9 @@ void SortParticles(){
 }
 
 void genParticles(double delta) {
-    int newparticles = (int)(delta*10000.0);
-    if (newparticles > (int)(0.016f*10000.0))
-        newparticles = (int)(0.016f*10000.0);
+    int newparticles = (int)(delta*1000.0);
+    if (newparticles > (int)(0.016f*1000.0))
+        newparticles = (int)(0.016f*1000.0);
 
     for(int i=0; i<newparticles; i++){
         int particleIndex = FindUnusedParticle();
@@ -64,14 +67,14 @@ void genParticles(double delta) {
         ParticlesContainer[particleIndex].pos = glm::vec3(0,0.5,-3);
 
         float spread = 1.5f;
-        glm::vec3 maindir = glm::vec3(0.0f, 0.0f, -8.0f);
+        glm::vec3 maindir = glm::vec3(0.0f, 0.0f, -3.0f);
         // Very bad way to generate a random direction;
         // See for instance http://stackoverflow.com/questions/5408276/python-uniform-spherical-distribution instead,
         // combined with some user-controlled parameters (main direction, spread, etc)
         glm::vec3 randomdir = glm::vec3(
-                (rand()%2000 - 1000.0f)/1000.0f,
-                (rand()%2000 - 1000.0f)/1000.0f,
-                (rand()%2000 - 1000.0f)/1000.0f
+                (rand()%2000 - 1000.0f)/2000.0f,
+                (rand()%2000)/2000.0f,
+                (rand()%2000 - 1000.0f)/2000.0f
         );
 
         ParticlesContainer[particleIndex].speed = maindir + randomdir*spread;
@@ -83,7 +86,7 @@ void genParticles(double delta) {
         ParticlesContainer[particleIndex].b = rand() % 256;
         ParticlesContainer[particleIndex].a = (rand() % 256) / 3;
 
-        ParticlesContainer[particleIndex].size = (rand()%1000)/2000.0f + 0.1f;
+        ParticlesContainer[particleIndex].size = (rand()%1000)/4000.0f + 0.1f;
 
     }
 }
@@ -185,7 +188,6 @@ int main() {
     GLuint matrix_particle = glGetUniformLocation(particle_shader_program, "VP");
 
     GLuint Texture = loadBMP_custom(BITMAP_PATH);
-    GLuint particle_texture = loadBMP_custom(SMOKE_BITMAP_PATH);
     GLuint TextureID  = glGetUniformLocation(shader_program, "myTexture");
     GLuint particle_texture_id  = glGetUniformLocation(particle_shader_program, "myTextureSampler");
 
@@ -243,6 +245,24 @@ int main() {
     glGenBuffers(1, &uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, uv_vertices.size() * sizeof(glm::vec2), &uv_vertices[0], GL_STATIC_DRAW);
+
+    GLuint smoke_texture;
+    glGenTextures(1, &smoke_texture);
+    int width, height, n_components;
+    unsigned char* smoke_data = stbi_load(SMOKE_PNG_PATH, &width, &height, &n_components, 0);
+    GLenum smoke_format;
+
+    switch (n_components) {
+        case 1:
+            smoke_format = GL_RED;
+            break;
+        case 3:
+            smoke_format = GL_RGB;
+            break;
+        case 4:
+            smoke_format = GL_RGBA;
+            break;
+    }
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -339,7 +359,14 @@ int main() {
 
         // Bind our texture in Texture Unit 1
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, particle_texture);
+        glBindTexture(GL_TEXTURE_2D, smoke_texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, smoke_format, width, height, 0, smoke_format, GL_UNSIGNED_BYTE, smoke_data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         // Set our "myTextureSampler" sampler to use Texture Unit 0
         glUniform1i(particle_texture_id, 1);
 
@@ -405,7 +432,7 @@ int main() {
         glDisableVertexAttribArray(2);
 
         glDisable(GL_BLEND);
-        
+
         // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();

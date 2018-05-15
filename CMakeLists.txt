@@ -77,7 +77,7 @@ set(CAR_HEADERS
 set(CAR_SOURCES
         car/src/main.cpp
         commons/shader.cpp
-        commons/drawer.cpp)
+        commons/drawer.cpp commons/stb_image.h)
 
 set(KIJANG_HEADERS
 		commons/shader.h
@@ -103,7 +103,9 @@ set(UAS_HEADERS
 		commons/shader.h
 		commons/drawer.h
         commons/texture.h
-		commons/objloader.h commons/particle.h)
+		commons/objloader.h
+        commons/particle.h
+        commons/stb_image.h)
 
 set(UAS_SOURCES
         uas/src/main_uas.cpp
