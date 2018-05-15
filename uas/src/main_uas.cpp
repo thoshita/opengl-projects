@@ -94,8 +94,8 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    GLfloat camera_x = 0, camera_y = 0, camera_z = -3;
-    GLfloat direction_x = 0, direction_y = 0, direction_z = 3;
+    GLfloat camera_x = -10, camera_y = 3, camera_z = 3;
+    GLfloat direction_x = 10, direction_y = -3, direction_z = -3;
     GLfloat acceleration = 0.1;
 
     do {
