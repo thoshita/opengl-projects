@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <commons/texture.h>
+#include <commons/objloader.h>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ using namespace std;
 #define NUM_OF_WHEELS 5
 #define VERTEX_SHADER_FILE_PATH  "uas/shaders/vertex_shader.glsl"
 #define FRAGMENT_SHADER_FILE_PATH "uas/shaders/fragment_shader.glsl"
-#define BITMAP_PATH "uas/uvtemplate.bmp"
+#define BITMAP_PATH "uas/turfafildah.bmp"
 
 void errorCallback(int error, const char * description) {
     cout << "Error " << error << ": " << description << endl;
@@ -67,109 +68,22 @@ int main() {
     glm::mat4 Model      = glm::mat4(1.0f);
     glm::mat4 MVP;
 
-    vector<int> start_of_section;
-    GLfloat _vertices[][6] = {
-            {-0.9f, -0.2f, 0.f, 1.f, 0.f, 0.f},
-            {-0.9f, 0.f, 0.f, 1.f, 0.f, 0.f},
-            {-0.8f, 0.1f, 0.f, 1.f, 0.f, 0.f},
-            {-0.5f, 0.2f, 0.f, 1.f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.f, 1.f, 0.f, 0.f},
-
-            {-0.5f, 0.2f, 0.f, 1.f, 0.f, 0.f},
-            {-0.1f, 0.4f, 0.f, 1.f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.f, 1.f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.f, 1.f, 0.f, 0.f},
-            {0.9f, -0.1f, 0.f, 1.f, 0.f, 0.f},
-            {0.8f, -0.2f, 0.f, 1.f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.f, 1.f, 0.f, 0.f},
-
-            {-0.9f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.9f, 0.f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.8f, 0.1f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.5f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
-
-            {-0.5f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.1f, 0.4f, 0.5f, 1.f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.5f, 1.f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.5f, 1.f, 0.f, 0.f},
-            {0.9f, -0.1f, 0.5f, 1.f, 0.f, 0.f},
-            {0.8f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 1.f, 0.f, 0.f},
-
-            {-0.9f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.9f, 0.f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.9f, 0.f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.9f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {-0.9f, 0.f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.8f, 0.1f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.8f, 0.1f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.9f, 0.f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {-0.8f, 0.1f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.5f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.5f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.8f, 0.1f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {-0.5f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.1f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.1f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.5f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {-0.1f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.1f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {0.8f, 0.4f, 0.f, 0.5f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
-            {0.8f, 0.4f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {0.9f, 0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {0.9f, -0.1f, 0.f, 0.5f, 0.f, 0.f},
-            {0.9f, -0.1f, 0.5f, 0.5f, 0.f, 0.f},
-            {0.9f, 0.2f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {0.9f, -0.1f, 0.f, 0.5f, 0.f, 0.f},
-            {0.8f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {0.8f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
-            {0.9f, -0.1f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {0.8f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
-            {0.8f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
-
-            {-0.5f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.9f, -0.2f, 0.f, 0.5f, 0.f, 0.f},
-            {-0.9f, -0.2f, 0.5f, 0.5f, 0.f, 0.f},
-            {-0.5f, -0.2f, 0.5f, 0.5f, 0.f, 0.f}
-    };
-
-    GLfloat vertices[64][3];
-    GLfloat uv_vertices[64][2];
-
-    for (int i = 0; i < 64; i++) {
-        vertices[i][0] = _vertices[i][0];
-        vertices[i][1] = _vertices[i][1];
-        vertices[i][2] = _vertices[i][2];
-        uv_vertices[i][0] = (vertices[i][0] + 1) / 2;
-        uv_vertices[i][1] = (vertices[i][1] + 1) / 2;
-    }
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uv_vertices;
+    std::vector<glm::vec3> normals;
+    bool res = loadOBJ("uas/car.obj", vertices, uv_vertices, normals);
 
     GLuint vertex_buffer;
 
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
     GLuint uv_buffer;
 
     glGenBuffers(1, &uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(uv_vertices), uv_vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, uv_vertices.size() * sizeof(glm::vec2), &uv_vertices[0], GL_STATIC_DRAW);
 
     GLuint vertex_array;
     glGenVertexArrays(1, &vertex_array);
@@ -233,14 +147,7 @@ int main() {
         );
 
         // Draw the triangle !
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
-        glDrawArrays(GL_TRIANGLE_FAN, 5, 7);
-        glDrawArrays(GL_TRIANGLE_FAN, 12, 5);
-        glDrawArrays(GL_TRIANGLE_FAN, 17, 7);
-
-        for(int i = 0; i < 10; i++) {
-            glDrawArrays(GL_TRIANGLE_FAN, 24 + i*4, 4);
-        }
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);

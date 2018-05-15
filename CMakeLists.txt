@@ -102,13 +102,15 @@ set(TEXTURE_SOURCES
 set(UAS_HEADERS
 		commons/shader.h
 		commons/drawer.h
-        commons/texture.h)
+        commons/texture.h
+		commons/objloader.h)
 
 set(UAS_SOURCES
         uas/src/main_uas.cpp
 		commons/shader.cpp
 		commons/drawer.cpp
-        commons/texture.cpp)
+        commons/texture.cpp
+		commons/objloader.cpp)
 
 add_executable(triangle
         ${TRIANGLE_HEADERS}
