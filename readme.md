@@ -15,3 +15,4 @@
 - `triangle`
 - `car`
 - `kijang`
+- `uas`
