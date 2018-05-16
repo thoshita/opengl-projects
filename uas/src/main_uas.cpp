@@ -30,7 +30,7 @@ using namespace std;
 
 GLfloat y_min = 999;
 
-const int MaxParticles = 10000;
+const int MaxParticles = 50000;
 Particle ParticlesContainer[MaxParticles];
 int LastUsedParticle = 0, ParticlesCount = 0;
 
@@ -67,7 +67,7 @@ void genParticles(double delta) {
     for(int i=0; i<newparticles; i++){
         int particleIndex = FindUnusedParticle();
 
-        if (i % 8 != 0) {
+        if (i % 10 != 0) {
             // Smoke
             ParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
             ParticlesContainer[particleIndex].pos = glm::vec3(0, 0.5, -3);
@@ -86,18 +86,18 @@ void genParticles(double delta) {
             // Type: 0 - smoke
             ParticlesContainer[particleIndex].r = 0;
 
-            ParticlesContainer[particleIndex].size = (rand() % 1000) / 4000.0f + 0.1f;
+            ParticlesContainer[particleIndex].size = (rand() % 1000) / 4000.0f + 0.3f;
         }
         else {
             // Rain
             ParticlesContainer[particleIndex].life = 1000;
-            ParticlesContainer[particleIndex].pos = glm::vec3((rand() % 2000000 - 1000000) / 10000.0f / 5,
+            ParticlesContainer[particleIndex].pos = glm::vec3((rand() % 20000000 - 10000000) / 100000.0f / 7,
                                                                100,
-                                                              (rand() % 2000000 - 1000000) / 10000.0f / 5);
+                                                              (rand() % 20000000 - 10000000) / 100000.0f / 7);
 
-            ParticlesContainer[particleIndex].speed = glm::vec3(0, 0, 0);
+            ParticlesContainer[particleIndex].speed = glm::vec3(0, - rand() % 10000 / 10.0f, 0);
 
-            // Type: 0 - smoke
+            // Type: 1 - rain
             ParticlesContainer[particleIndex].r = 1;
 
             ParticlesContainer[particleIndex].size = 0.1;
@@ -256,16 +256,28 @@ int main() {
         uv_vertices.push_back(glm::vec2(terrain_uv[i*2], terrain_uv[i*2 + 1]));
     }
 
-    static const GLfloat g_vertex_buffer_data[] = {
+    static const GLfloat g_rain_buffer_data[] = {
             -0.1f, -1.f, 0.0f,
             0.1f, -1.f, 0.0f,
             -0.1f,  1.f, 0.0f,
             0.1f,  1.f, 0.0f,
     };
 
+    static const GLfloat g_vertex_buffer_data[] = {
+            -1.f, -1.f, 0.0f,
+            -1.f,  1.f, 0.0f,
+            1.f, -1.f, 0.0f,
+            1.f,  1.f, 0.0f,
+    };
+
     GLuint particle_vertex_array;
     glGenVertexArrays(1, &particle_vertex_array);
     glBindVertexArray(particle_vertex_array);
+
+    GLuint rain_vertex_buffer;
+    glGenBuffers(1, &rain_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, rain_vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_rain_buffer_data), g_rain_buffer_data, GL_STATIC_DRAW);
 
     GLuint billboard_vertex_buffer;
     glGenBuffers(1, &billboard_vertex_buffer);
@@ -351,6 +363,7 @@ int main() {
         double delta = currentTime - lastTime;
         lastTime = currentTime;
 
+        printf("%.2f\n", 1.0f / delta);
         genParticles(delta);
         simulateParticles(delta, glm::vec3(camera_x, camera_y, camera_z));
 
@@ -480,6 +493,18 @@ int main() {
                 (void*)0                          // array buffer offset
         );
 
+        // 4th attribute buffer : rain vertices
+        glEnableVertexAttribArray(3);
+        glBindBuffer(GL_ARRAY_BUFFER, rain_vertex_buffer);
+        glVertexAttribPointer(
+                3,                  // attribute. No particular reason for 3, but must match the layout in the shader.
+                3,                  // size
+                GL_FLOAT,           // type
+                GL_FALSE,           // normalized?
+                0,                  // stride
+                (void*)0            // array buffer offset
+        );
+
         // These functions are specific to glDrawArrays*Instanced*.
         // The first parameter is the attribute buffer we're talking about.
         // The second parameter is the "rate at which generic vertex attributes advance when rendering multiple instances"
@@ -487,6 +512,7 @@ int main() {
         glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0
         glVertexAttribDivisor(1, 1); // positions : one per quad (its center)                 -> 1
         glVertexAttribDivisor(2, 1); // color : one per quad                                  -> 1
+        glVertexAttribDivisor(3, 0); // particles vertices : always reuse the same 4 vertices -> 0
 
         // Draw the particules !
         // This draws many times a small triangle_strip (which looks like a quad).
@@ -498,6 +524,7 @@ int main() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
+        glDisableVertexAttribArray(3);
 
         glDisable(GL_BLEND);
 
