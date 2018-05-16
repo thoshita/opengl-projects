@@ -67,7 +67,7 @@ void genParticles(double delta) {
     for(int i=0; i<newparticles; i++){
         int particleIndex = FindUnusedParticle();
 
-        if (i % 2 == 0) {
+        if (i % 8 != 0) {
             // Smoke
             ParticlesContainer[particleIndex].life = 5.0f; // This particle will live 5 seconds.
             ParticlesContainer[particleIndex].pos = glm::vec3(0, 0.5, -3);
@@ -90,17 +90,17 @@ void genParticles(double delta) {
         }
         else {
             // Rain
-            ParticlesContainer[particleIndex].life = 10;
-            ParticlesContainer[particleIndex].pos = glm::vec3((rand() % 2000000 - 1000000) / 100000.0f,
-                                                               10,
-                                                              (rand() % 2000000 - 1000000) / 100000.0f);
+            ParticlesContainer[particleIndex].life = 1000;
+            ParticlesContainer[particleIndex].pos = glm::vec3((rand() % 2000000 - 1000000) / 10000.0f / 5,
+                                                               100,
+                                                              (rand() % 2000000 - 1000000) / 10000.0f / 5);
 
             ParticlesContainer[particleIndex].speed = glm::vec3(0, 0, 0);
 
             // Type: 0 - smoke
             ParticlesContainer[particleIndex].r = 1;
 
-            ParticlesContainer[particleIndex].size = 0.04;
+            ParticlesContainer[particleIndex].size = 0.1;
         }
     }
 }
@@ -149,6 +149,7 @@ void simulateParticles(double delta, glm::vec3 CameraPosition) {
             }else{
                 // Particles that just died will be put at the end of the buffer in SortParticles();
                 p.cameradistance = -1.0f;
+                p.life = -1.0f;
             }
 
             ParticlesCount++;
@@ -230,11 +231,36 @@ int main() {
         y_min = min(y_min, vertex.y);
     }
 
+    static const GLfloat terrain_vertices[] = {
+            -1000.0f, y_min, -1000.0f,
+            1000.0f, y_min,  -1000.0f,
+            -1000.0f, y_min, 1000.0f,
+
+            1000.0f, y_min,  -1000.0f,
+            -1000.0f, y_min, 1000.0f,
+            1000.0f, y_min, 1000.0f
+    };
+
+    static const GLfloat terrain_uv[] = {
+            -1.0f, -1.0f,
+            1.0f, -1.0f,
+            -1.0f, 1.0f,
+
+            1.0f, -1.0f,
+            -1.0f, 1.0f,
+            1.0f, 1.0f
+    };
+
+    for (int i = 0; i < 6; i++) {
+        vertices.push_back(glm::vec3(terrain_vertices[i*3], terrain_vertices[i*3 + 1], terrain_vertices[i*3 + 2]));
+        uv_vertices.push_back(glm::vec2(terrain_uv[i*2], terrain_uv[i*2 + 1]));
+    }
+
     static const GLfloat g_vertex_buffer_data[] = {
-            -0.25f, -0.5f, 0.0f,
-            0.25f, -0.5f, 0.0f,
-            -0.25f,  0.5f, 0.0f,
-            0.25f,  0.5f, 0.0f,
+            -0.1f, -1.f, 0.0f,
+            0.1f, -1.f, 0.0f,
+            -0.1f,  1.f, 0.0f,
+            0.1f,  1.f, 0.0f,
     };
 
     GLuint particle_vertex_array;
@@ -274,7 +300,6 @@ int main() {
     glGenBuffers(1, &uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, uv_vertices.size() * sizeof(glm::vec2), &uv_vertices[0], GL_STATIC_DRAW);
-
     GLuint smoke_texture;
     glGenTextures(1, &smoke_texture);
     int smoke_width, smoke_height, n_components;
@@ -321,6 +346,7 @@ int main() {
     double lastTime = glfwGetTime();
 
     do {
+        camera_y = max(camera_y, y_min + 0.1f);
         double currentTime = glfwGetTime();
         double delta = currentTime - lastTime;
         lastTime = currentTime;
